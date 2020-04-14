@@ -1,47 +1,49 @@
-import React from 'react';
-import logo from '../assets/logo.svg';
-import './homepage.css';
+import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import banner from '../assets/banner.jpg';
+import './homepage.scss';
 
-import { connect } from 'react-redux';
-import { getAccount } from '../store/user/actions';
+export default function HomePage() {
 
-class HomePage extends React.Component {
+  const offsetDate = new Date()
+  const offset = offsetDate.getTimezoneOffset()
+  const currDate = new Date(offsetDate.getTime() + (offset*60*1000))
 
-  componentDidMount() {
-    this.props.getAccount();
+  const [date, setDate] = useState(currDate.toISOString().split('T')[0]);
+
+  const handleDateChange = (e) => {
+    setDate(e.target.value)
   }
 
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+  return (
+    <div className="home-page">
+      <div className="banner-container">
+        <img src={banner} alt="Banner" className="banner" />
       </div>
-    );
-  }
-}
+      <div className="content-container">
+        <div className="header-container">
+          <p className="header">A Day in the Life</p>
+          <p className="subtext">Experience the world as it used to be.</p>
+        </div>
+        <div className="form-container">
+          <TextField
+            id="date"
+            type="date"
+            className="date-picker"
+            value={date}
+            onChange={handleDateChange}
+          />
+          <Button 
+            className="go-btn"
+            variant="contained"
+            color="secondary"
+          >
+            Go
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 
-function mapStateToProps(state) {
-  return {
-    loggedIn: state.user.loggedIn
-  };
 }
-
-export default connect(
-  mapStateToProps, 
-  {
-    getAccount,
-  }
-)(HomePage);
